@@ -11,6 +11,20 @@ const protcectRoute = (req,res,next) => {
     next();
 }
 
-export const requieAdmin = async (req,res,next) =>{
-    
+export const requireAdmin = async (req,res,next) =>{
+    try {
+        const currentUser = await clerkClient.users.getUser(req.auth.userId);
+        const isAdmin  = process.env.ADMIN_EMAIL == currentUser.primaryEmailAddress?.emailAddress;
+        if(!isAdmin){
+            return res.state(403).json({
+                message:"Unauthorized you must be an admin"
+            })
+        }
+        next();
+    } catch (error) {
+        res.state(500).json({
+            message:"Internal server error",
+            error:error.message
+        })
+    }   
 }
