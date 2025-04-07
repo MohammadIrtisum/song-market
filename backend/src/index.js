@@ -7,10 +7,12 @@ import songRouters from './routers/song.route.js'
 import albumRouters from './routers/album.route.js'
 import startRouters from './routers/star.route.js'
 import { connectDB } from './lib/db.js';
+import { clerkMiddleware } from '@clerk/express'
 
 dotenv.config();
 const app = express();
 app.use(express.json()); // to parse req.body
+app.use(clerkMiddleware()) //this will add to auth to req object => req.auth.userId
 const PORT = process.env.PORT
 
 app.use("/api/users", userRouters);
